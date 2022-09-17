@@ -250,3 +250,57 @@ spec:
   - name: workdir
     emptyDir: {}
 ```
+## Configure a Pod to Use a ConfigMap
+ref https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+
+O `ConfigMap` serve para armazenar configurações diversas no cluster.
+É possível criar um config map a partir de um arquivo:
+`kubectl create configmap game-config-2 --from-file=game.properties`
+
+E pode se vincular isso as envs de um pod:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dapi-test-pod
+spec:
+  containers:
+    - name: test-container
+      image: registry.k8s.io/busybox
+      command: [ "/bin/sh", "-c", "env" ]
+      env:
+        # Define the environment variable
+        - name: SPECIAL_LEVEL_KEY
+          valueFrom:
+            configMapKeyRef:
+              # The ConfigMap containing the value you want to assign to SPECIAL_LEVEL_KEY
+              name: game-config-2
+              # Specify the key associated with the value
+              key: game.name
+  restartPolicy: Never
+```
+
+Também é possível montar um volume com base no conteudo do `ConfigMap`:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dapi-test-pod
+spec:
+  containers:
+    - name: test-container
+      image: registry.k8s.io/busybox
+      command: [ "/bin/sh", "-c", "ls /etc/config/" ]
+      volumeMounts:
+      - name: config-volume
+        mountPath: /etc/config
+  volumes:
+    - name: config-volume
+      configMap:
+        # Provide the name of the ConfigMap containing the files you want
+        # to add to the container
+        name: game-config-2
+  restartPolicy: Never
+```
