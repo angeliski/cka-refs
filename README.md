@@ -5,3 +5,4 @@ Esse é um repo onde estou jogando anotações e materiais que achei durante o m
 
 - https://medium.com/bb-tutorials-and-thoughts/how-to-pass-the-certified-kubernetes-administrator-cka-exam-9e01f1aa93b8
 - https://www.zhaohuabing.com/post/2022-02-08-how-to-prepare-cka-en/
+- https://blog.mayadata.io/kubernetes-storage-basics-pv-pvc-and-storageclass
